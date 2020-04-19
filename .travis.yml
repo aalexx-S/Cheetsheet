@@ -10,7 +10,7 @@ services:
 
 before_install:
     - docker pull docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-    - docker-compose up
+    - docker-compose up -d
 
 install:
     - sudo apt-get install -qq pipenv
