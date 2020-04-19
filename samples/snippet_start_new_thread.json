@@ -1,0 +1,4 @@
+{
+    "language": "python",
+    "snippet": "import _thread\nimport time\n\n# Define a function for the thread\ndef print_time(threadName, delay):\n   count = 0\n   while count < 5:\n      time.sleep(delay)\n      count += 1\n      print(\"%s: %s\" % (threadName, time.ctime(time.time()) ))\n\n# Create two threads as follows\ntry:\n   _thread.start_new_thread(print_time, (\"Thread-1\", 2,))\n   _thread.start_new_thread(print_time, (\"Thread-2\", 4,))\nexcept:\n   print(\"Error: unable to start thread\")\n\nwhile 1:\n   pass"
+}

@@ -1,0 +1,4 @@
+{
+    "language": "python",
+    "snippet": "\nfrom queue import PriorityQueue\n\ncustomers = PriorityQueue()\ncustomers.put((2, \"Harry\"))\ncustomers.put((3, \"Charles\"))\ncustomers.put((1, \"Riya\"))\ncustomers.put((4, \"Stacy\"))\n\nwhile not customers.empty():\n    next_item = customers.get()\n    print(next_item)\n"
+}
