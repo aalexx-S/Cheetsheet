@@ -1,11 +1,11 @@
 # Cheetsheet
 
 ## Prerequisite
-+ docker
-+ docker-compose
++ [docker]
++ [docker-compose]
 + python 3.7
-+ pipenv
-+ curl
++ [pipenv]
++ [curl]
 
 ## Installation
 1. Download ElasticSearch docker image.
@@ -36,3 +36,7 @@
     $ curl http://localhost:9200/_search\?
     ```
 
+[docker]: https://www.docker.com/products/docker-desktop
+[docker-compose]: https://docs.docker.com/compose/install/
+[pipenv]: https://pipenv-fork.readthedocs.io/en/latest/
+[curl]: https://curl.haxx.se/download.html
