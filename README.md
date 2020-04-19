@@ -25,6 +25,8 @@
     $ pipenv run python install.py samples
     ```
 5. Verify the installation using simple Elastic query.
+
+
     + Check cluster health.
     ```sh
     $ curl http://localhost:9200/
