@@ -14,7 +14,7 @@ before_install:
 
 install:
     - sudo apt-get update -qq
-    - sudo apt-get install -qq pipenv
+    - pip install pipenv
     - sudo apt-get install -qq curl
 
 script:
