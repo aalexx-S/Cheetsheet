@@ -1,0 +1,24 @@
+git:
+    depth: 1
+
+language: python
+python:
+    - "3.7"
+
+services:
+    - docker
+
+before_install:
+    - docker pull docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    - docker-compose up
+
+install:
+    - sudo apt-get install -qq pipenv
+    - sudo apt-get install -qq curl
+
+script:
+    - pipenv install --dev
+    - pipenv run python install.py samples
+    - curl http://localhost:9200/
+    - curl http://localhost:9200/_search\?
+
