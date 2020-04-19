@@ -21,11 +21,16 @@
     $ pipenv install --dev
     ```
 4. Run the Cheetsheet sample installer and populate the local ElasticSearch cluster.
-   ```sh
-   $ pipenv run python install.py samples
-   ```
+    ```sh
+    $ pipenv run python install.py samples
+    ```
 5. Verify the installation using simple Elastic query.
-   ```sh
-   $ curl http://localhost:9200/_search\?
-   ```
+    + Check cluster health.
+    ```sh
+    $ curl http://localhost:9200/
+    ```
+    + Dump a few samples.
+    ```sh
+    $ curl http://localhost:9200/_search\?
+    ```
 
