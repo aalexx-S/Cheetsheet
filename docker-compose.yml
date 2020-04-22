@@ -73,8 +73,9 @@ services:
 
   elasticsearch_exporter:
     image: justwatch/elasticsearch_exporter:1.1.0
+    container_name: elasticsearch_exporter
     command:
-      - '-es.uri=http://10.128.0.4:9200'
+      - '--es.all'
     restart: always
     ports:
       - 9114:9114
@@ -92,6 +93,7 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - '-config.file=/etc/prometheus/prometheus.yml'
+    restart: always
     ports:
       - 9090:9090
     networks:
