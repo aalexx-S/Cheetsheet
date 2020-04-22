@@ -8,7 +8,7 @@ services:
       - 9200:9200
       - 9300:9300
     volumes:
-      - "master.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+      - ./master.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - elastic
     deploy:
@@ -19,7 +19,7 @@ services:
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
     volumes:
-      - slave.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./slave.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - elastic
     environment:
