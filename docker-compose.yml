@@ -25,51 +25,55 @@ services:
         constraints:
           - "node.role==worker"
 
-  #es02:
-  #  image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-  #  container_name: es02
-  #  environment:
-  #    - node.name=es02
-  #    - cluster.name=es-docker-cluster
-  #    - discovery.seed_hosts=es01,es03
-  #    - cluster.initial_master_nodes=es01,es02,es03
-  #    - bootstrap.memory_lock=true
-  #    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  #  ulimits:
-  #    memlock:
-  #      soft: -1
-  #      hard: -1
-  #  volumes:
-  #    - data02:/usr/share/elasticsearch/data
-  #  networks:
-  #    - elastic
-  #  deploy:
-  #    placement:
-  #      constraints:
-  #        - "node.role==worker"
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    container_name: es02
+    environment:
+      - node.name=es02
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data02:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+    deploy:
+      placement:
+        constraints:
+          - "node.role==worker"
 
-  #es03:
-  #  image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-  #  container_name: es03
-  #  environment:
-  #    - node.name=es03
-  #    - cluster.name=es-docker-cluster
-  #    - discovery.seed_hosts=es01,es02
-  #    - cluster.initial_master_nodes=es01,es02,es03
-  #    - bootstrap.memory_lock=true
-  #    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  #  ulimits:
-  #    memlock:
-  #      soft: -1
-  #      hard: -1
-  #  volumes:
-  #    - data03:/usr/share/elasticsearch/data
-  #  networks:
-  #    - elastic
-  #  deploy:
-  #    placement:
-  #      constraints:
-  #        - "node.role==worker"
+  es03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    container_name: es03
+    environment:
+      - node.name=es03
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es02
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data03:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+    deploy:
+      placement:
+        constraints:
+          - "node.role==worker"
 
   elasticsearch_exporter:
     image: justwatch/elasticsearch_exporter:1.1.0
