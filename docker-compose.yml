@@ -1,4 +1,4 @@
-version: '2.2'
+version: '3'
 services:
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
@@ -20,6 +20,11 @@ services:
       - 9200:9200
     networks:
       - elastic
+    deploy:
+      placement:
+        constraints:
+          - "node.role==worker"
+
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
     container_name: es02
@@ -38,6 +43,11 @@ services:
       - data02:/usr/share/elasticsearch/data
     networks:
       - elastic
+    deploy:
+      placement:
+        constraints:
+          - "node.role==worker"
+
   es03:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
     container_name: es03
@@ -56,6 +66,56 @@ services:
       - data03:/usr/share/elasticsearch/data
     networks:
       - elastic
+    deploy:
+      placement:
+        constraints:
+          - "node.role==worker"
+
+  elasticsearch_exporter:
+    image: justwatch/elasticsearch_exporter:1.1.0
+    command:
+      - '-es.uri=http://127.0.0.1:9200'
+    restart: always
+    ports:
+      - 9114:9114
+    networks:
+      - elastic
+    deploy:
+      placement:
+        constraints:
+          - "node.role==manager"
+
+  prometheus:
+    image: prom/prometheus:0.18.0
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '-config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+    networks:
+      - elastic
+    deploy:
+      placement:
+        constraints:
+          - "node.role==manager"
+
+  grafana:
+    image: grafana/grafana:6.1.6
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=pass
+    links:
+      - prometheus
+    ports:
+      - 3000:3000
+    networks:
+      - elastic
+    deploy:
+      placement:
+        constraints:
+          - "node.role==manager"
 
 volumes:
   data01:
@@ -67,4 +127,4 @@ volumes:
 
 networks:
   elastic:
-    driver: bridge
+    driver: overlay
