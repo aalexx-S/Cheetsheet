@@ -14,8 +14,6 @@ services:
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      - data01:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     networks:
@@ -39,8 +37,6 @@ services:
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      - data02:/usr/share/elasticsearch/data
     networks:
       - elastic
     deploy:
@@ -62,8 +58,6 @@ services:
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      - data03:/usr/share/elasticsearch/data
     networks:
       - elastic
     deploy:
@@ -118,14 +112,6 @@ services:
       placement:
         constraints:
           - "node.role==manager"
-
-volumes:
-  data01:
-    driver: local
-  data02:
-    driver: local
-  data03:
-    driver: local
 
 networks:
   elastic:
