@@ -8,7 +8,7 @@ global:
 scrape_configs:
   - job_name: 'docker'
     target_groups:
-      - targets: ['localhost:9841']
+      - targets: ['172.17.0.1:9841']
   - job_name: 'eexporter'
     target_groups:
-      - targets: ['localhost:9114']
+      - targets: ['172.17.0.1:9114']
