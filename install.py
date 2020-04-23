@@ -1,11 +1,11 @@
 import sys
 import os
 import requests
+import json
 
 
 def main():
     samples = os.listdir(sys.argv[1])
-    #index = 0
 
     payloads = []
     for sample in samples:
@@ -22,13 +22,13 @@ def main():
         payloads.append(payload)
 
     len_payloads = len(payloads)
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     bound = 100000
     for id in range(0, bound):
         idx = id % len_payloads
         url = f"""http://localhost:9200/cheetsheet/python/{id}"""
-        result = requests.post(url, json=payloads[idx])
-        #print(f"""Install {sample_path} ...""")
-        #index += 1
+        result = requests.post(url, data=json.dumps(payloads[idx]), headers=headers)
+        print(result.text)
 
 
 if __name__ == "__main__":
