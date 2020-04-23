@@ -33,7 +33,7 @@ services:
     image: justwatch/elasticsearch_exporter:1.1.0
     container_name: elasticsearch_exporter
     command:
-      - '--es.all'
+      - '--es.uri=http://10.128.0.4:9200'
     restart: always
     ports:
       - 9114:9114
