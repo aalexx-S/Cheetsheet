@@ -22,14 +22,15 @@ def main():
         payloads.append(payload)
 
     len_payloads = len(payloads)
-    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     bound = 100000
     for id in range(0, bound):
         idx = id % len_payloads
         url = f"""http://localhost:9200/cheetsheet/python/{id}"""
-        result = requests.post(url, data=json.dumps(payloads[idx]), headers=headers)
+        result = requests.post(url, json={
+            "language": "python",
+            "content": id
+        })
         print(result.text)
-
 
 if __name__ == "__main__":
     main()
