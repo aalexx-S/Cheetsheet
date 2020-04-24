@@ -6,7 +6,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
       - ./elastic_master.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./data:/usr/share/elasticsearch/data
+      - data:/usr/share/elasticsearch/data
     networks:
       - elastic
     ports:
@@ -45,6 +45,10 @@ services:
       - 3000:3000
     networks:
       - elastic
+
+volumes:
+  data:
+    driver: local
 
 networks:
   elastic:
