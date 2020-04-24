@@ -5,28 +5,21 @@ services:
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     volumes:
-      - ./elastic_data.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elastic.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - data:/usr/share/elasticsearch/data
-    networks:
-      - elastic
     ports:
       - 9200:9200
       - 9300:9300
+    network_mode: host
 
   elasticsearch-exporter:
     image: justwatch/elasticsearch_exporter:1.1.0
     command:
       - '--es.uri=http://172.17.0.1:9200'
-    restart: always
     ports:
       - 9114:9114
-    networks:
-      - elastic
+    network_mode: host
 
 volumes:
   data:
     driver: local
-
-networks:
-  elastic:
-    driver: bridge

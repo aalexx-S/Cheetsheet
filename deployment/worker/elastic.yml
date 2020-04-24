@@ -1,7 +1,10 @@
 cluster.name: cheetsheet
-node.master: true
 network.host: _site_
 cluster.initial_master_nodes:
-  - elastic-master
+  - 10.128.0.3
+  - 10.128.0.4
+  - 10.128.0.5
 discovery.seed_hosts:
-  - 10.128.0.3:9300
+  - 10.128.0.3
+  - 10.128.0.4
+  - 10.128.0.5

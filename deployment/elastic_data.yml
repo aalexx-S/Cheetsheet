@@ -1,5 +1,0 @@
-cluster.name: cheetsheet
-node.data: true
-network.host: _site_
-discovery.seed_hosts:
-  - 10.128.0.3:9300
