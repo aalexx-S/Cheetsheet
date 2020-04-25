@@ -18,8 +18,11 @@ def populate(ip, root):
             continue
 
         code = None
-        with open(sample_path, "r") as hdle:
-            code = hdle.read()
+        try:
+            with open(sample_path, "r") as hdle:
+                code = hdle.read()
+        except:
+            continue
 
         payload = {
             'language': 'python',
