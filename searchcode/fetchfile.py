@@ -29,7 +29,7 @@ def work(outputdir, base_url, *, start=0, offset=1, per_page=20, num_limit=0):
         num_limit:
             Numer of repository to download accross all threads. Set 0 for no limit.
     """
-    BRANCH = ['master', 'develop']
+    BRANCH = ['master', 'develop', 'dev', 'staging']
 
     github_raw = 'https://raw.githubusercontent.com/'
 
