@@ -15,7 +15,7 @@ services:
   elasticsearch-exporter:
     image: justwatch/elasticsearch_exporter:1.1.0
     command:
-      - '--es.uri=http://172.17.0.1:9200'
+      - '--es.uri=http://localhost:9200'
     ports:
       - 9114:9114
     network_mode: host

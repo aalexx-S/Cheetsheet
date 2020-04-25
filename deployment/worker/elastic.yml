@@ -1,10 +1,10 @@
 cluster.name: cheetsheet
 network.host: _site_
 cluster.initial_master_nodes:
-  - 10.128.0.3
   - 10.128.0.4
   - 10.128.0.5
+  - 10.128.0.6
 discovery.seed_hosts:
-  - 10.128.0.3
   - 10.128.0.4
   - 10.128.0.5
+  - 10.128.0.6
