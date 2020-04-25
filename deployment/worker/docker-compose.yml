@@ -1,0 +1,25 @@
+version: '3'
+services:
+  elastic-data:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - ./elastic.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+    network_mode: host
+
+  elasticsearch-exporter:
+    image: justwatch/elasticsearch_exporter:1.1.0
+    command:
+      - '--es.uri=http://localhost:9200'
+    ports:
+      - 9114:9114
+    network_mode: host
+
+volumes:
+  data:
+    driver: local
