@@ -18,6 +18,12 @@ def main(myarg):
         print(f'Number of results: {res["total"]}')
         exit(0)
 
+    # check per_query
+    if myarg.per_query > 100:
+        myarg.per_query = 100
+    if myarg.per_query < 1:
+        myarg.per_query = 1
+
     # create output dir if not exist
     os.makedirs(myarg.output, exist_ok=True)
 
@@ -38,7 +44,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Clone git repos with keywords')
     parser.add_argument('-n', '--num', type=int, default=-1, help='Number of repo to download, pass 0 for all. Only print out number of repo by default.')
     parser.add_argument('-t', '--thread', type=int, default=1, help='Number of threads. It make sense since most workload should be on disk writing.')
-    parser.add_argument('-p', '--per_query', type=int, default=20, help='Max number of result per query.')
+    parser.add_argument('-p', '--per_query', type=int, default=20, help='Max number of result per query. Maximun 100, All numbers larger than 100 will be set to 100.')
     parser.add_argument('-o', '--output', type=str, default=os.getcwd(), help="A director to store all downloaded files. The directory will be created if it doesn't exist")
     parser.add_argument('Q', type=str, nargs='+', help="Keywords to query. Don't need to type 'Q', just type keywords.")
     arg = parser.parse_args()
