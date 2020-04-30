@@ -66,6 +66,13 @@
             repo: https://github.com/Cheetsheet/Cheetsheet.git
             dest: /srv/CheetSheet
 
+        - name: Install Cheetsheet+ dependencies
+          shell: '{{ item }}'
+          args:
+            chdir: /srv/CheetSheet/
+          with_items:
+            - pipenv install --dev
+
         - name: Get the login username
           command: whoami
           changed_when: false
