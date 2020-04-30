@@ -1,0 +1,15 @@
+[cheetsheet_worker_external]
+35.188.146.47
+34.69.241.223
+34.67.91.5
+
+[cheetsheet_worker_internal]
+10.128.0.12
+10.128.0.13
+10.128.0.14
+
+[cheetsheet_controller_external]
+23.236.51.8
+
+[cheetsheet_controller_internal]
+10.128.0.15
