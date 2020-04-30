@@ -1,0 +1,4 @@
+cluster.name: cheetsheet
+network.host: _site_
+cluster.initial_master_nodes: [{{ cheetsheet_workers }}]
+discovery.seed_hosts: [{{ cheetsheet_workers }}]

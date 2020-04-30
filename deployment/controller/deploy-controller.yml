@@ -1,0 +1,112 @@
+---
+    - hosts: cheetsheet_controller_external
+      become: yes
+      gather_facts: no
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+
+      pre_tasks:
+        - name: Bootstrap
+          raw: '{{ item }}'
+          with_items:
+            - yes '' | add-apt-repository ppa:deadsnakes/ppa
+            - apt update
+            - yes '' | apt install python
+
+      tasks:
+        - name: Install Python3.7 and Pip3
+          apt:
+            name: [
+              'python3.7',
+              'python3-pip',
+              'python3-apt'
+            ]
+            state: latest
+            force: yes
+            update_cache: yes
+
+        - name: Change Python and Pip alias
+          shell: '{{ item }}'
+          with_items:
+            - update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
+            - update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
+
+        - name: Install Pipenv
+          apt:
+            name: [
+              'pipenv'
+            ]
+            state: latest
+            force: yes
+            update_cache: yes
+
+        - name: Install Docker
+          apt:
+            name: [
+              'docker.io',
+              'docker-compose'
+            ]
+            state: latest
+            force: yes
+            update_cache: yes
+
+        - name: Install monitoring tools
+          apt:
+            name: [
+              'htop',
+              'iotop',
+              'net-tools'
+            ]
+            state: latest
+            force: yes
+            update_cache: yes
+
+        - name: Clone Cheetsheet+ repo
+          git:
+            repo: https://github.com/Cheetsheet/Cheetsheet.git
+            dest: /srv/CheetSheet
+
+        - name: Get the login username
+          command: whoami
+          changed_when: false
+          become: false
+          register: whoami
+
+        - name: Set the fact "login_user"
+          set_fact:
+            login_user: '{{ whoami.stdout }}'
+
+        - name: Create staging configuration folder
+          file:
+            path: '{{ item }}'
+            state: directory
+            mode: 0755
+            owner: '{{ login_user }}'
+          with_items:
+            - /srv/CheetSheet/staging
+            - /srv/CheetSheet/staging/controller
+
+        - name: Set the fact "cheetsheet_workers"
+          set_fact: cheetsheet_workers='{%for host in groups['cheetsheet_worker_internal']%}"{{host}}:9114"{% if not loop.last %},{% endif %}{% endfor %}'
+
+        - name: Copy staging configurations
+          template:
+            src: '{{ item.src }}'
+            dest: '{{ item.dest }}'
+          with_items:
+            - src: ./prometheus.yml.j2
+              dest: /srv/CheetSheet/staging/controller/prometheus.yml
+            - src: ./docker-compose.yml
+              dest: /srv/CheetSheet/staging/controller/docker-compose.yml
+
+        - name: Start Docker daemon
+          service:
+            name: docker
+            state: restarted
+
+        - name: Start Cheetsheet+
+          shell: '{{ item }}'
+          args:
+            chdir: /srv/CheetSheet/staging/controller
+          with_items:
+            - docker-compose up -d
