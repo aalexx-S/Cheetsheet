@@ -4,10 +4,12 @@ import requests
 
 from .singleton import Singleton
 
+
 class SearchcodeApiCaller(metaclass=Singleton):
     """
     Singleton class. Call .call() to call http get on an api.
     """
+
     def __init__(self):
         self.__time = 0
         self.__lock = threading.Lock()
