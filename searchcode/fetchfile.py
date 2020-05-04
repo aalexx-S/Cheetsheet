@@ -73,7 +73,7 @@ def work(outputdir, base_url, *, start=0, offset=1, per_page=20, num_limit=0):
                 file_url = f'{file_url}/{result["filename"]}'
 
                 # download file and store it
-                file_res = requests.get(file_url)
+                file_res = requests.get(file_url, timeout=5)
                 if file_res.ok:
                     # filename
                     ofn = os.path.join(

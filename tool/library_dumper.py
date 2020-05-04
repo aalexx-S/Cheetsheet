@@ -81,7 +81,7 @@ class LibraryDumpaer():
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output", help="Path to the sqlite dump.")
+    parser.add_argument('-o', '--output', help='Path to the sqlite dump.')
 
     args = parser.parse_args()
     if args.output is None:
@@ -92,5 +92,5 @@ def main():
     dumper.run()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
