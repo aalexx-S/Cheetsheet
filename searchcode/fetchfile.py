@@ -3,6 +3,7 @@ import requests
 
 from .searchcodeapicaller import SearchcodeApiCaller
 
+
 def work(outputdir, base_url, *, start=0, offset=1, per_page=20, num_limit=0):
     """
     Call searchcode api starting from page={start} and with {offset} pages.
@@ -40,7 +41,7 @@ def work(outputdir, base_url, *, start=0, offset=1, per_page=20, num_limit=0):
         page += offset
 
         # return when reach download limit
-        if num_limit > 0 and  page * per_page > num_limit:
+        if num_limit > 0 and page * per_page > num_limit:
             return
 
         url = f'{base_url}&per_page={per_page}&p={page}'
@@ -52,7 +53,8 @@ def work(outputdir, base_url, *, start=0, offset=1, per_page=20, num_limit=0):
         # max number
         result_repos = res['results']
         if num_limit > 0:
-            result_repos = result_repos[:max(min(len(res), num_limit - page * per_page), 0)]
+            result_repos = result_repos[:max(
+                min(len(res), num_limit - page * per_page), 0)]
 
         for result in result_repos:
             ## form url to get target file.
@@ -71,10 +73,13 @@ def work(outputdir, base_url, *, start=0, offset=1, per_page=20, num_limit=0):
                 file_url = f'{file_url}/{result["filename"]}'
 
                 # download file and store it
-                file_res = requests.get(file_url)
+                file_res = requests.get(file_url, timeout=5)
                 if file_res.ok:
                     # filename
-                    ofn = os.path.join(outputdir, f'{username}_{result["name"]}_{result["location"].replace(os.path.sep, "_")}_{result["filename"]}')
+                    ofn = os.path.join(
+                        outputdir,
+                        f'{username}_{result["name"]}_{result["location"].replace(os.path.sep, "_")}_{result["filename"]}'
+                    )
                     try:
                         with open(ofn, 'bw') as of:
                             of.write(file_res.content)
@@ -84,4 +89,6 @@ def work(outputdir, base_url, *, start=0, offset=1, per_page=20, num_limit=0):
                     break
 
             if not success:
-                print(f'File not found: repo={result["repo"]}, loc={result["location"]}, file={result["filename"]}')
+                print(
+                    f'File not found: repo={result["repo"]}, loc={result["location"]}, file={result["filename"]}'
+                )
