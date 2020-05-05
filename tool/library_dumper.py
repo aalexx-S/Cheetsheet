@@ -1,82 +1,62 @@
-import distutils.sysconfig as sysconfig
 import os
-import importlib.util
+import importlib
 import inspect
 import sqlite3
 import argparse
+import ast
+import sys
+from stdlib_list import stdlib_list
 
 
 class LibraryDumpaer():
 
     def __init__(self, output):
-        self.std_lib = sysconfig.get_python_lib(standard_lib=True)
         self.db_conn = sqlite3.connect(output)
-        self.db_conn.execute('''
-            CREATE TABLE python_library (
-            function TEXT PRIMARY KEY NOT NULL,
-            visited INTEGER NOT NULL)''')
+        try:
+            self.db_conn.execute('''
+                CREATE TABLE python_library (
+                function TEXT PRIMARY KEY NOT NULL,
+                visited INTEGER NOT NULL)''')
+        except Exception as e:
+            pass
 
     def __del__(self):
         self.db_conn.close()
 
+    def parse_ast(self, filename):
+        with open(filename, 'rt') as file:
+            return ast.parse(file.read(), filename=filename)
+
+    def parse_ast_node(self, body, prefix, collect):
+        for node in body:
+            if isinstance(node, ast.FunctionDef):
+                func = node.name
+                sig = '.'.join([prefix, func])
+                collect.append(sig)
+            elif isinstance(node, ast.ClassDef):
+                extend_prefix = '.'.join([prefix, node.name])
+                self.parse_ast_node(node.body, extend_prefix, collect)
+
     def run(self):
-        for root, dirs, files in os.walk(self.std_lib):
-            if self.is_bad_package(root):
-                continue
+        libs = stdlib_list("3.7")
+        for lib in libs:
+            try:
+                module = importlib.import_module(lib)
+                src = inspect.getsourcefile(module)
+                tree = self.parse_ast(src)
 
-            for file in files:
-                if self.is_internal_module(file):
-                    continue
-                path = os.path.join(root, file)
-                self.load_module(file, path)
+                collect = []
+                self.parse_ast_node(tree.body, lib, collect)
 
-    def is_bad_package(self, root):
-        last = os.path.basename(root)
-        if last.find('python') == -1:
-            return True
-        return False
-
-    def is_internal_module(self, file):
-        if file[-3:] != '.py':
-            return True
-        if file == '__init__.py':
-            return True
-        if file.find('test') != -1 or file.find('_') != -1:
-            return True
-        return False
-
-    def is_internal_function(self, function):
-        if function.startswith('_'):
-            return True
-        return False
-
-    def load_module(self, file, path):
-        try:
-            spec = importlib.util.spec_from_file_location(file, path)
-            root = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(root)
-            root_name = root.__name__[:-3]
-
-            # Work around for os.path package.
-            # Note we may have many alias issues, so consider fix it later.
-            if root_name == 'posixpath':
-                root_name = os.path.join('os', 'path')
-
-            functions = inspect.getmembers(root, inspect.isfunction)
-            for pair in functions:
-                if self.is_internal_function(pair[0]):
-                    continue
-                function = os.path.join(root_name, pair[0])
-
-                self.db_conn.execute(
-                    '''
-                    INSERT or REPLACE INTO python_library
-                    (function, visited) VALUES (?, ?)
-                ''', (function, 0))
-                self.db_conn.commit()
-
-        except Exception as e:
-            pass
+                for sig in collect:
+                    self.db_conn.execute(
+                        '''
+                        INSERT or REPLACE INTO python_library
+                        (function, visited) VALUES (?, ?)
+                    ''', (sig, 0))
+                    self.db_conn.commit()
+            except Exception as e:
+                print(e, file=sys.stderr)
 
 
 def main():

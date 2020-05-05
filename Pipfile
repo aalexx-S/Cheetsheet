@@ -9,6 +9,7 @@ verify_ssl = true
 requests = "*"
 yapf = "*"
 pylint = "*"
+stdlib-list = "*"
 
 [requires]
 python_version = "3.7"
